@@ -1,8 +1,8 @@
-import os
 import pandas as pd
 import numpy as np
-from pathlib import Path
 import json
+from pathlib import Path
+from os import sep
 
 class DatumPydantic:
     dataset: pd.DataFrame
@@ -23,7 +23,7 @@ class Datum:
         self.__setup(data_pth)
 
     def __setup(self, pth: str):
-        self.dataset= load_csv(pth)
+        self.dataset= load_data_csv(pth)
 
     @property
     def attributes(self):
@@ -34,7 +34,7 @@ class Datum:
         return [col for col in self.dataset.columns if pd.api.types.is_object_dtype(self.dataset[col])]
 
 
-def get_details(df: DatumPydantic, sort_details: bool = False) -> dict:
+def get_stats(df: DatumPydantic, sort_details: bool = False) -> dict:
     result = dict()
     for col in df.categorical_attributes:
         col_det = df.dataset[col].value_counts(sort=sort_details, dropna=False)
@@ -61,7 +61,7 @@ def validate_path(pth: str, parents: bool = True, exist: bool = True) -> bool:
 def save_data_stats(data_stats: dict, pth: str, f_name: str):
     try:
         validate_path(pth=pth)
-        with open(os.sep.join([pth, f_name]), 'w') as f:
+        with open(sep.join([pth, f_name]), 'w') as f:
             json.dump(data_stats, f)
         msg= 'File di statistiche salvato correttamente'
     except Exception as e:
@@ -73,7 +73,7 @@ def save_data_stats(data_stats: dict, pth: str, f_name: str):
 def save_dataframe_as_csv(data: pd.DataFrame, pth: str, f_name: str, separator: chr = ',', decimal_separator: chr = '.'):
     try:
         validate_path(pth=pth)
-        data.to_csv(path_or_buf=os.sep.join([pth, f_name]),
+        data.to_csv(path_or_buf=sep.join([pth, f_name]),
                     sep=separator, index=False,
                     decimal=decimal_separator)
         msg = 'Dataframe convertito salvato correttamente'
@@ -83,24 +83,6 @@ def save_dataframe_as_csv(data: pd.DataFrame, pth: str, f_name: str, separator: 
     finally:
         print(msg)
 
-def load_csv(pth: str, separator: chr = ',', memoy: bool = False) -> pd.DataFrame:
+def load_data_csv(pth: str, separator: chr = ',', memoy: bool = False) -> pd.DataFrame:
     return pd.read_csv(pth, sep=separator, low_memory=memoy)
 
-# percorso completo con il nome del dataset da caricare come ultimo elemento
-lst_folder = [...,'DF_NAME.csv']
-df_path = os.sep.join(lst_folder)
-
-# percorso completo con il nome del file di statistiche da salvare come ultimo elemento
-stats_list_param = [..., 'STATS_FILE_NAME.json']
-stats_path = os.sep.join(stats_list_param[:-1])
-
-dtantic = DatumPydantic()
-dtantic.dataset = load_csv(df_path)
-
-print(f'DatAntic: {dtantic.categorical_attributes}')
-
-diz = get_details(dtantic)
-
-change_values(diz, dtantic)
-save_data_stats(diz, stats_path, stats_list_param[-1])
-save_dataframe_as_csv(dtantic.dataset, stats_path, 'pippo.csv')
