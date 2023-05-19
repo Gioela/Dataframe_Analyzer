@@ -43,6 +43,16 @@ def get_stats(df: DatumPydantic, sort_details: bool = False) -> dict:
     #     print(k, v)
     return result
 
+def convert_attribute_name_to_object_type(data: DatumPydantic, col_name: str, in_place: bool=True) -> None:
+    try:
+        if in_place:
+            data.dataset = data.dataset.astype({col_name : 'object'})
+        else:
+            return data.dataset.astype({col_name : 'object'})
+    except KeyError as e:
+        # raise KeyError('column name is incorrect or not found')
+        raise e
+
 def change_values(converter: dict, data: DatumPydantic):
     for col_name in converter.keys():
         data.dataset[col_name].replace(to_replace=pd.unique( data.dataset[col_name] ),

@@ -78,5 +78,21 @@ def test_get_stats(init_datum):
     #     assert couple[0] == couple[1]
     #     assert valid_dict['class'][couple[0]] == result['class'][couple[1]]
 
-def test_convert_attribute_to_categorical():
-    ...
+def test_convert_attribute_name_to_object_type_in_place(init_datum):
+    col_name = 'sepal width'
+    analyzer.convert_attribute_name_to_object_type(init_datum, col_name)
+    assert init_datum.dataset[col_name].dtypes == 'object'
+
+def test_convert_attribute_name_to_object_type_not_in_place(init_datum):
+    col_name = 'sepal width'
+    pd_series = analyzer.convert_attribute_name_to_object_type(init_datum, col_name, False)
+    assert init_datum.dataset[col_name].dtypes == 'float64'
+    assert init_datum.dataset[col_name].dtypes != 'object'
+    assert pd_series[col_name].dtypes == 'object'
+
+def test_convert_attribute_name_to_object_type_exception(init_datum):
+    col_name = 'sepal_width'
+    with pytest.raises(KeyError) as excinfo:
+        analyzer.convert_attribute_name_to_object_type(init_datum, col_name)
+    # assert 'column name is incorrect or not found' in str(excinfo.value)
+    # assert init_datum.dataset[col_name].dtypes == 'object', 'column name is incorrect or not found'
