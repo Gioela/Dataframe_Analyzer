@@ -52,6 +52,18 @@ def convert_attribute_name_to_object_type(data: DatumPydantic, col_name: str, in
     except KeyError as e:
         # raise KeyError('column name is incorrect or not found')
         raise e
+    
+def convert_attribute_by_position_to_object_type(data: DatumPydantic, col_pos: int, in_place: bool=True) -> None:
+    if col_pos > len(data.dataset.columns) or col_pos < 0:
+        raise IndexError()
+    try:
+        col_name = data.dataset.columns[col_pos]
+        if in_place:
+            convert_attribute_name_to_object_type(data, col_name)
+        else:
+            return convert_attribute_name_to_object_type(data, col_name, False)
+    except KeyError as e:
+        raise e
 
 def change_values(converter: dict, data: DatumPydantic):
     for col_name in converter.keys():
