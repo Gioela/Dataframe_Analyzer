@@ -12,10 +12,10 @@ class DatumPydantic:
         return self.dataset.columns
     
     @property
-    def categorical_attributes(self):
+    def object_attributes(self):
         return [col for col in self.dataset.columns if pd.api.types.is_object_dtype(self.dataset[col])]
-        # self._categorical_attributes = [col for col in self.dataset.columns if pd.api.types.is_object_dtype(self.dataset[col])]
-        # return self._categorical_attributes
+        # self._object_attributes = [col for col in self.dataset.columns if pd.api.types.is_object_dtype(self.dataset[col])]
+        # return self._object_attributes
     
 
 class Datum:
@@ -30,13 +30,13 @@ class Datum:
         return self.dataset.columns()    
 
     @property
-    def categorical_attributes(self):
+    def object_attributes(self):
         return [col for col in self.dataset.columns if pd.api.types.is_object_dtype(self.dataset[col])]
 
 
 def get_stats(df: DatumPydantic, sort_details: bool = False) -> dict:
     result = dict()
-    for col in df.categorical_attributes:
+    for col in df.object_attributes:
         col_det = df.dataset[col].value_counts(sort=sort_details, dropna=False)
         result[col] = {col_det.index[idx]: str([idx, col_det[idx], col_det[idx] * 100 / np.sum(col_det)] ) for idx in range(len(col_det.index))}
     # for k,v in result.items():

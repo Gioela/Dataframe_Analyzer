@@ -44,10 +44,10 @@ def test_property_attributes(init_datum):
     for e in list(zip(cols,init_datum.attributes)):
         assert e[0] == e[1]
 
-def test_property_categorical_attributes(init_datum):
+def test_property_object_attributes(init_datum):
     cols = ['class']
-    assert len(cols) == len(init_datum.categorical_attributes)
-    for e in list(zip(cols,init_datum.categorical_attributes)):
+    assert len(cols) == len(init_datum.object_attributes)
+    for e in list(zip(cols,init_datum.object_attributes)):
         assert e[0] == e[1]
 
 def test_type_dataset_datum_class(init_datum):

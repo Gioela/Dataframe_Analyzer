@@ -13,7 +13,7 @@ stats_path = os.sep.join(stats_list_param[:-1])
 dtantic = DatumPydantic()
 dtantic.dataset = analyzer.load_data_csv(df_path)
 
-print(f'DatAntic: {dtantic.categorical_attributes}')
+print(f'DatAntic: {dtantic.object_attributes}')
 
 diz = analyzer.get_stats(dtantic)
 
