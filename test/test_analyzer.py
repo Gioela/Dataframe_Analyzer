@@ -46,9 +46,15 @@ def test_property_attributes(init_datum):
 
 def test_property_object_attributes(init_datum):
     cols = ['class']
-    assert len(cols) == len(init_datum.object_attributes)
-    for e in list(zip(cols,init_datum.object_attributes)):
-        assert e[0] == e[1]
+    lst_obj_attributes = init_datum.object_attributes
+    assert len(cols) == len(lst_obj_attributes)
+    assert ['class'] == lst_obj_attributes
+    assert 'class' == lst_obj_attributes[0]
+    
+    # this solution is not good: in case of an error it will be more difficult
+    # to find what is the value that has generated the error
+    # for e in list(zip(cols,init_datum.object_attributes)):
+    #     assert e[0] == e[1]
 
 def test_type_dataset_datum_class(init_datum):
     assert type(init_datum.dataset) == pd.DataFrame
