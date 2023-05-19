@@ -39,7 +39,6 @@ def get_stats(df: DatumPydantic, sort_details: bool = False) -> dict:
     for col in df.categorical_attributes:
         col_det = df.dataset[col].value_counts(sort=sort_details, dropna=False)
         result[col] = {col_det.index[idx]: str([idx, col_det[idx], col_det[idx] * 100 / np.sum(col_det)] ) for idx in range(len(col_det.index))}
-
     # for k,v in result.items():
     #     print(k, v)
     return result
